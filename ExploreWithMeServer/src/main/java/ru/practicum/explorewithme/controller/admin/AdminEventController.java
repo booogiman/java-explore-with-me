@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.controller.admin;
 
 
+import org.springframework.validation.annotation.Validated;
 import ru.practicum.explorewithme.dto.comment.CommentDto;
 import ru.practicum.explorewithme.dto.event.AdminUpdateEventRequestDto;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 @RequestMapping(path = "/admin")
 public class AdminEventController {
 
@@ -23,13 +25,13 @@ public class AdminEventController {
     private final CommentService commentService;
 
     @GetMapping("/events")
-    public List<EventFullDto> getEventsAdmin(@RequestParam int[] users,
-                                             @RequestParam String[] states,
-                                             @RequestParam int[] categories,
-                                             @RequestParam String rangeStart,
-                                             @RequestParam String rangeEnd,
-                                             @RequestParam int from,
-                                             @RequestParam int size) {
+    public List<EventFullDto> getEventsAdmin(@RequestParam(required = false) int[] users,
+                                             @RequestParam(required = false) String[] states,
+                                             @RequestParam(required = false) int[] categories,
+                                             @RequestParam(required = false) String rangeStart,
+                                             @RequestParam(required = false) String rangeEnd,
+                                             @RequestParam(name = "from", defaultValue = "0") int from,
+                                             @RequestParam(name = "size", defaultValue = "10") int size) {
         log.info("Администратор запросил список событий с параметрами users={}, states={}, categories={}, rangeStart={}, rangeEnd={}, from={}, size={}",
                 users, states, categories, rangeStart, rangeEnd, from, size);
         return eventService.getEventsAdmin(users, states, categories, rangeStart, rangeEnd, from, size);

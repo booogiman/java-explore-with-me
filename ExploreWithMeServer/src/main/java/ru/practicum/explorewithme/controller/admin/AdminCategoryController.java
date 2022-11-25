@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.controller.admin;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.category.CategoryDto;
 import ru.practicum.explorewithme.dto.category.NewCategoryDto;
@@ -12,13 +13,14 @@ import javax.validation.Valid;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 @RequestMapping(path = "/admin")
 public class AdminCategoryController {
 
     private final CategoriesService categoriesService;
 
     @PatchMapping("/categories")
-    public CategoryDto updateCategory(@RequestBody CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@RequestBody @Valid  CategoryDto categoryDto) {
         log.info("Администратор обновил категорию={}", categoryDto);
         return categoriesService.updateCategory(categoryDto);
     }

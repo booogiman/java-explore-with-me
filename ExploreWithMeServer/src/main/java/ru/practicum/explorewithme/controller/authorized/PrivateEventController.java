@@ -2,6 +2,7 @@ package ru.practicum.explorewithme.controller.authorized;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.comment.CommentDto;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
@@ -14,11 +15,13 @@ import ru.practicum.explorewithme.service.RequestService;
 import ru.practicum.explorewithme.service.CommentService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RestController
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/users")
 public class PrivateEventController {
     private final EventService eventService;
@@ -41,7 +44,7 @@ public class PrivateEventController {
     }
 
     @PostMapping("/{userId}/events")
-    public EventFullDto postEvent(@PathVariable int userId,
+    public EventFullDto postEvent(@PathVariable @Positive int userId,
                                   @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Пользователь id={} создал событие={}", userId, newEventDto);
         return eventService.addEvent(newEventDto, userId);

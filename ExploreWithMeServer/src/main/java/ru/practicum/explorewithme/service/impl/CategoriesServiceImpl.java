@@ -2,16 +2,16 @@ package ru.practicum.explorewithme.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.controller.exceptionHandling.exception.ConditionsNotMetException;
-import ru.practicum.explorewithme.controller.exceptionHandling.exception.EntryNotFoundException;
+import ru.practicum.explorewithme.controller.exceptionHandling.exception.NotFoundException;
 import ru.practicum.explorewithme.dto.category.CategoryDto;
 import ru.practicum.explorewithme.dto.category.NewCategoryDto;
 import ru.practicum.explorewithme.dto.category.mapper.CategoryMapper;
 import ru.practicum.explorewithme.model.Category;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.repository.CategoryRepository;
 import ru.practicum.explorewithme.service.CategoriesService;
@@ -75,6 +75,6 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public Category getCategoryOrThrow(int categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(() ->
-                new EntryNotFoundException("Отсутствует категория с id: " + categoryId));
+                new NotFoundException("Отсутствует категория с id: " + categoryId));
     }
 }
