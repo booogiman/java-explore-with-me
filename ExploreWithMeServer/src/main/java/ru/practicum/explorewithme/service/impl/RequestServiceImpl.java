@@ -1,17 +1,17 @@
 package ru.practicum.explorewithme.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.controller.exceptionHandling.exception.ConditionsNotMetException;
 import ru.practicum.explorewithme.controller.exceptionHandling.exception.EntryNotFoundException;
 import ru.practicum.explorewithme.dto.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.dto.request.mapper.RequestMapper;
-import lombok.RequiredArgsConstructor;
 import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.model.Request;
 import ru.practicum.explorewithme.model.User;
 import ru.practicum.explorewithme.model.enumeration.EventState;
 import ru.practicum.explorewithme.model.enumeration.RequestState;
-import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.repository.RequestRepository;
 import ru.practicum.explorewithme.service.EventService;
 import ru.practicum.explorewithme.service.RequestService;

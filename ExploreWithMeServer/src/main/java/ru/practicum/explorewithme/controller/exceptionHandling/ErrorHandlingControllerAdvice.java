@@ -1,123 +1,111 @@
 package ru.practicum.explorewithme.controller.exceptionHandling;
 
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.controller.exceptionHandling.exception.ConditionsNotMetException;
-import ru.practicum.explorewithme.controller.exceptionHandling.exception.EntryNotFoundException;
-import ru.practicum.explorewithme.controller.exceptionHandling.exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import ru.practicum.explorewithme.model.ApiError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.explorewithme.controller.exceptionHandling.exception.ApiError;
+import ru.practicum.explorewithme.controller.exceptionHandling.exception.BadRequestException;
+import ru.practicum.explorewithme.controller.exceptionHandling.exception.ForbiddenException;
+import ru.practicum.explorewithme.controller.exceptionHandling.exception.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandlingControllerAdvice {
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
-    @ResponseBody
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ValidationErrorResponse onConstraintValidationException(
-            ConstraintViolationException e
-    ) {
-        final List<Violation> violations = e.getConstraintViolations().stream()
-                .map(
-                        violation -> new Violation(
-                                violation.getPropertyPath().toString(),
-                                violation.getMessage()
-                        )
-                )
-                .collect(Collectors.toList());
-        violationLogging(violations);
-        return new ValidationErrorResponse(violations);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
-    public ValidationErrorResponse onMethodArgumentNotValidException(
-            MethodArgumentNotValidException e
-    ) {
-        final List<Violation> violations = e.getBindingResult().getFieldErrors().stream()
-                .map(error -> new Violation(error.getField(), error.getDefaultMessage()))
-                .collect(Collectors.toList());
-        violationLogging(violations);
-        return new ValidationErrorResponse(violations);
-    }
-
-    @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError onValidationException(ValidationException exception) {
-        log.error(exception.getMessage());
-        return new ApiError(
-                exception.getMessage(),
-                HttpStatus.BAD_REQUEST.getReasonPhrase(),
-                HttpStatus.BAD_REQUEST.toString(),
-                LocalDateTime.now().format(formatter)
-        );
+    @ExceptionHandler(BadRequestException.class)
+    public ApiError handleBadRequestException(BadRequestException ex) {
+        return ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message(ex.getMessage())
+                .reason("Incorrect data was sent in the request")
+                .build();
     }
 
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiError onEntryNotFoundException(final EntryNotFoundException exception) {
-        log.error(exception.getMessage());
-        return new ApiError(
-                exception.getMessage(),
-                HttpStatus.NOT_FOUND.getReasonPhrase(),
-                HttpStatus.NOT_FOUND.toString(),
-                LocalDateTime.now().format(formatter)
-        );
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ApiError handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        return ApiError.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Required request body is missing")
+                .reason("Incorrect data was sent in the request")
+                .build();
     }
 
-    @ExceptionHandler(ConditionsNotMetException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ApiError handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .peek(e -> log.info("Validation error: {}", e.getDefaultMessage()))
+                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+        return ApiError.builder()
+                .errors(errors)
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Validation error")
+                .reason("Incorrect data was sent in the request")
+                .build();
+    }
+
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ApiError onConditionsNotMetException(ConditionsNotMetException exception) {
-        log.error(exception.getMessage());
-        return new ApiError(
-                exception.getMessage(),
-                HttpStatus.FORBIDDEN.getReasonPhrase(),
-                HttpStatus.FORBIDDEN.toString(),
-                LocalDateTime.now().format(formatter)
-        );
+    @ExceptionHandler(ForbiddenException.class)
+    public ApiError handleForbiddenException(ForbiddenException ex) {
+        return ApiError.builder()
+                .status(HttpStatus.FORBIDDEN)
+                .message(ex.getMessage())
+                .reason("Access to the object is prohibited or there are no rights")
+                .build();
     }
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiError onThrowableException(Throwable throwable) {
-        log.error(throwable.getMessage());
-        return new ApiError(
-                throwable.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
-                HttpStatus.INTERNAL_SERVER_ERROR.toString(),
-                LocalDateTime.now().format(formatter)
-        );
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ApiError handleNoSuchElementFoundException(NotFoundException ex) {
+        return ApiError.builder()
+                .status(HttpStatus.NOT_FOUND)
+                .message(ex.getMessage())
+                .reason("Requested an item that is missing from the service")
+                .build();
     }
 
-    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ApiError handleMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+        return ApiError.builder()
+                .status(HttpStatus.METHOD_NOT_ALLOWED)
+                .message(ex.getMessage().toLowerCase())
+                .reason("The method used in the request is not allowed by this endpoint")
+                .build();
+    }
+
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ApiError onDataIntegrityViolation(DataIntegrityViolationException exception) {
-        log.error(exception.getMessage());
-        return new ApiError(
-                exception.getMessage(),
-                HttpStatus.CONFLICT.getReasonPhrase(),
-                HttpStatus.CONFLICT.toString(),
-                LocalDateTime.now().format(formatter)
-        );
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ApiError handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return ApiError.builder()
+                .status(HttpStatus.CONFLICT)
+                .message(Objects.requireNonNull(ex.getMessage()).split(";")[0])
+                .reason("Database exception, invalid values sent")
+                .build();
     }
 
-    //логгирование нарушений валидации
-    public void violationLogging(List<Violation> violations) {
-        for (Violation violation : violations) {
-            log.error(violation.getFieldName() + ": " + violation.getMessage());
-        }
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(RuntimeException.class)
+    public ApiError handleServerErrorException(RuntimeException ex) {
+        ex.printStackTrace();
+        return ApiError.builder()
+                .status(HttpStatus.CONFLICT)
+                .message(ex.getMessage())
+                .reason("Internal server error")
+                .build();
     }
-
 }
