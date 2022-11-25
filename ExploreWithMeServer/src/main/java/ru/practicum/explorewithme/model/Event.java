@@ -19,7 +19,7 @@ public class Event {
     @Column(name = "annotation")
     @Size(max = 2000, min = 20)
     private String annotation;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "category_id")
     private Category category;
     @Column(name = "created", nullable = false)
