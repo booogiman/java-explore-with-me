@@ -11,7 +11,7 @@ services:
       - POSTGRES_USER=dima
       - POSTGRES_PASSWORD=password
   stats-db:
-    image: postgres:13.7-alpine
+    image: postgres:14-alpine
     ports:
       - "6541:5432"
     environment:
@@ -31,7 +31,7 @@ services:
       - POSTGRES_USER=dima
       - POSTGRES_PASSWORD=password
   ewm-db:
-    image: postgres:13.7-alpine
+    image: postgres:14-alpine
     ports:
       - "6542:5432"
     environment:
