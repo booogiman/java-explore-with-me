@@ -17,12 +17,12 @@ public class CommentMapper {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static CommentDto commentToDto(Comment comment) {
-        return new CommentDto(
-                comment.getId(),
-                comment.getContent(),
-                comment.getAuthor().getName(),
-                comment.getCreatedOn().format(FORMATTER)
-        );
+        return CommentDto.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .authorName(comment.getAuthor().getName())
+                .created(comment.getCreatedOn().format(FORMATTER))
+                .build();
     }
 
     public static List<CommentDto> commentToDtoList(List<Comment> comments) {

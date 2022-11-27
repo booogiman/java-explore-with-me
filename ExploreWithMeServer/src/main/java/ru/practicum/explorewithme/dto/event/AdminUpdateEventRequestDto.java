@@ -1,8 +1,8 @@
 package ru.practicum.explorewithme.dto.event;
 
-import ru.practicum.explorewithme.dto.location.LocationDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import ru.practicum.explorewithme.dto.location.LocationDto;
 
 @Data
 @AllArgsConstructor

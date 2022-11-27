@@ -2292,7 +2292,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EventShortDto"
+                    "$ref": "#/components/schemas/EventShortDTO"
                   }
                 }
               }
@@ -2520,7 +2520,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EventShortDto"
+                    "$ref": "#/components/schemas/EventShortDTO"
                   }
                 }
               }
@@ -3956,7 +3956,7 @@
               }
             ],
             "items": {
-              "$ref": "#/components/schemas/EventShortDto"
+              "$ref": "#/components/schemas/EventShortDTO"
             }
           },
           "id": {
@@ -4026,7 +4026,7 @@
             "example": 1
           },
           "initiator": {
-            "$ref": "#/components/schemas/UserShortDto"
+            "$ref": "#/components/schemas/UserShortDTO"
           },
           "location": {
             "$ref": "#/components/schemas/Location"
@@ -4077,7 +4077,7 @@
           }
         }
       },
-      "EventShortDto": {
+      "EventShortDTO": {
         "required": [
           "annotation",
           "category",
@@ -4114,7 +4114,7 @@
             "example": 1
           },
           "initiator": {
-            "$ref": "#/components/schemas/UserShortDto"
+            "$ref": "#/components/schemas/UserShortDTO"
           },
           "paid": {
             "type": "boolean",
@@ -4445,7 +4445,7 @@
         },
         "description": "Пользователь"
       },
-      "UserShortDto": {
+      "UserShortDTO": {
         "required": [
           "id",
           "name"

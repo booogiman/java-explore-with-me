@@ -41,7 +41,7 @@ public class PublicEventController {
                                          @RequestParam(required = false) Boolean isPaid,
                                          @RequestParam(required = false) String rangeStart,
                                          @RequestParam(required = false) String rangeEnd,
-                                         @RequestParam(defaultValue = "false") boolean onlyAvailable,
+                                         @RequestParam(required = false, defaultValue = "false") boolean onlyAvailable,
                                          @RequestParam(required = false) EventSortValues sort,
                                          @PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                          @Positive @RequestParam(defaultValue = "10") int size,

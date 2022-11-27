@@ -14,32 +14,12 @@ import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Integer> {
 
-    @Query(value = "SELECT e.* FROM events AS e " +
-            "LEFT JOIN (" +
-            "   SELECT COUNT(r.id) AS COUNT, event_id FROM requests AS r " +
-            "   WHERE r.status = 3 GROUP BY event_id" +
-            ") AS rcount ON rcount.event_id = e.id " +
-            "WHERE (false = :searchByText OR UPPER(e.annotation) like :text OR UPPER(e.description) like :text) " +
-            "AND (false = :searchByCategory OR e.category_id IN :categoryIds) " +
-            "AND (false = :searchByIsPaid OR e.is_paid = :isPaid) " +
-            "AND (false = :searchByOneDate OR e.event_date > :rangeStart) " +
-            "AND (true = :searchByOneDate OR e.event_date between :rangeStart and :rangeEnd) " +
-            "AND (false = :searchByOnlyAvailable OR e.participant_limit = 0 OR e.participant_limit > rcount.COUNT)" +
-            "ORDER BY event_date DESC",
-            nativeQuery = true)
-    List<Event> findEventsByParams(
-            @Param("searchByText")boolean searchByText,
-            @Param("text")String text,
-            @Param("searchByCategory")boolean searchByCategory,
-            @Param("categoryIds") Set<Integer> categoryIds,
-            @Param("searchByIsPaid")boolean searchByIsPaid,
-            @Param("isPaid")Boolean isPaid,
-            @Param("searchByOneDate")boolean searchByOneDate,
-            @Param("rangeStart")LocalDateTime rangeStart,
-            @Param("rangeEnd")LocalDateTime rangeEnd,
-            @Param("searchByOnlyAvailable")boolean searchByOnlyAvailable,
-            Pageable pageable
-    );
+    @Query("select e from Event e where (lower(e.annotation) like lower(concat('%', :text, '%')) or " +
+            "lower(e.description) like lower(concat('%', :text, '%')))" +
+            "AND ((:categoryIds) IS NULL OR e.category.id IN :categoryIds) " +
+            "and e.isPaid = :isPaid " +
+            "and e.eventDate between :rangeStart and :rangeEnd")
+    List<Event> findEvents(String text, Set<Integer> categoryIds, Boolean isPaid, LocalDateTime rangeStart, LocalDateTime rangeEnd);
 
     @Query(value = "SELECT e.* FROM events AS e " +
             "WHERE (false = :searchByUsers OR e.initiator_id IN :userIds) " +
@@ -49,15 +29,15 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
             "AND (false = :searchByOneDate OR e.event_date between :rangeStart and :rangeEnd)",
             nativeQuery = true)
     List<Event> findEventsByParamsAdmin(
-            @Param("searchByUsers")boolean searchByUsers,
+            @Param("searchByUsers") boolean searchByUsers,
             @Param("userIds") Set<Integer> userIds,
-            @Param("searchByStates")boolean searchByStates,
+            @Param("searchByStates") boolean searchByStates,
             @Param("stateIds") Set<Integer> stateIds,
-            @Param("searchByCategory")boolean searchByCategory,
+            @Param("searchByCategory") boolean searchByCategory,
             @Param("categoryIds") Set<Integer> categoryIds,
-            @Param("searchByOneDate")boolean searchByOneDate,
-            @Param("rangeStart")LocalDateTime rangeStart,
-            @Param("rangeEnd")LocalDateTime rangeEnd,
+            @Param("searchByOneDate") boolean searchByOneDate,
+            @Param("rangeStart") LocalDateTime rangeStart,
+            @Param("rangeEnd") LocalDateTime rangeEnd,
             Pageable pageable
     );
 

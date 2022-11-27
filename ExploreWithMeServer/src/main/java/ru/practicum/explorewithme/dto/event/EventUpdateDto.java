@@ -1,17 +1,17 @@
 package ru.practicum.explorewithme.dto.event;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class EventUpdateDto {
-    @JsonProperty(required = true)
+public class EventUpdateDto implements Serializable {
+    //@JsonProperty(required = true)
     @NotNull
     @Positive
     private Integer eventId;

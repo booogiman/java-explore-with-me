@@ -53,6 +53,9 @@ public class EventServiceImpl implements EventService {
                                          int from,
                                          int size) {
         sendStatHit(request); //отправка информации на сервер статистики
+        if (text.isBlank()) {
+            return new ArrayList<>();
+        }
         LocalDateTime dateStart = rangeStart == null || rangeStart.isEmpty() ?
                 LocalDateTime.now() :
                 LocalDateTime.parse(rangeStart, formatter);
@@ -62,23 +65,21 @@ public class EventServiceImpl implements EventService {
         Set<Integer> categorySet = categories == null ?
                 new HashSet<>() :
                 Arrays.stream(categories).boxed().collect(Collectors.toSet());
-        List<Event> events = eventRepository.findEventsByParams(
-                text != null && !text.isEmpty(),
-                "%" + text + "%",
-                !categorySet.isEmpty(),
-                categorySet,
-                isPaid != null,
-                isPaid,
-                dateEnd == null,
-                dateStart,
-                dateEnd == null ? dateStart : dateEnd,
-                onlyAvailable,
-                PageRequest.of(from / size, size)
-        );
+        List<Event> events = eventRepository.findEvents(text,categorySet,isPaid,dateStart,dateEnd);
+
         List<EventShortDto> eventShortDtos = new ArrayList<>();
         mapEventsToShortDto(events, eventShortDtos);
-        if (sort.equals("VIEWS")) {
-            eventShortDtos.sort(Comparator.comparing(EventShortDto::getViews));
+        if (sort != null) {
+            switch (sort) {
+                case "EVENT_DATE":
+                    eventShortDtos.sort(Comparator.comparing(EventShortDto::getEventDate));
+                    break;
+                case "VIEWS":
+                    eventShortDtos.sort(Comparator.comparing(EventShortDto::getViews));
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + sort);
+            }
         }
         return eventShortDtos;
     }

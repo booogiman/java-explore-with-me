@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,11 +11,11 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class UserDto {
     private Integer id;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     @NotNull
     @NotBlank
     private String name;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     @NotNull
     @NotBlank
     @Email

@@ -1,20 +1,19 @@
 package ru.practicum.explorewithme.dto.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
 public class ParticipationRequestDto {
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     private String created;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     private Integer event;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     private Integer id;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     private Integer requester;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     private String status;
 }

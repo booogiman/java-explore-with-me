@@ -1,6 +1,5 @@
 package ru.practicum.explorewithme.dto.compilation;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ import java.util.List;
 public class NewCompilationDto {
     private List<Integer> events;
     private boolean pinned;
-    @JsonProperty(required = true)
+    //@JsonProperty(required = true)
     @NotBlank
     private String title;
 }
