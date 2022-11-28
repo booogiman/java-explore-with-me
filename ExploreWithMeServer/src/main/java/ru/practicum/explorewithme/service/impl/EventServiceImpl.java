@@ -23,6 +23,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static ru.practicum.explorewithme.UtilClass.getFormat;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -53,33 +55,32 @@ public class EventServiceImpl implements EventService {
                                          int from,
                                          int size) {
         sendStatHit(request); //отправка информации на сервер статистики
-        if (text.isBlank()) {
-            return new ArrayList<>();
-        }
         LocalDateTime dateStart = rangeStart == null || rangeStart.isEmpty() ?
                 LocalDateTime.now() :
-                LocalDateTime.parse(rangeStart, formatter);
+                LocalDateTime.parse(rangeStart, getFormat());
         LocalDateTime dateEnd = rangeEnd == null || rangeEnd.isEmpty() ?
                 null :
-                LocalDateTime.parse(rangeEnd, formatter);
+                LocalDateTime.parse(rangeEnd, getFormat());
         Set<Integer> categorySet = categories == null ?
                 new HashSet<>() :
                 Arrays.stream(categories).boxed().collect(Collectors.toSet());
-        List<Event> events = eventRepository.findEvents(text,categorySet,isPaid,dateStart,dateEnd);
-
+        List<Event> events = eventRepository.findEventsByParams(
+                text != null && !text.isEmpty(),
+                "%" + text + "%",
+                !categorySet.isEmpty(),
+                categorySet,
+                isPaid != null,
+                isPaid,
+                dateEnd == null,
+                dateStart,
+                dateEnd == null ? dateStart : dateEnd,
+                onlyAvailable,
+                PageRequest.of(from / size, size)
+        );
         List<EventShortDto> eventShortDtos = new ArrayList<>();
         mapEventsToShortDto(events, eventShortDtos);
-        if (sort != null) {
-            switch (sort) {
-                case "EVENT_DATE":
-                    eventShortDtos.sort(Comparator.comparing(EventShortDto::getEventDate));
-                    break;
-                case "VIEWS":
-                    eventShortDtos.sort(Comparator.comparing(EventShortDto::getViews));
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + sort);
-            }
+        if (("VIEWS").equals(sort)) {
+            eventShortDtos.sort(Comparator.comparing(EventShortDto::getViews));
         }
         return eventShortDtos;
     }
@@ -94,10 +95,10 @@ public class EventServiceImpl implements EventService {
                                              int size) {
         LocalDateTime dateStart = rangeStart == null || rangeStart.isEmpty() ?
                 LocalDateTime.now() :
-                LocalDateTime.parse(rangeStart, formatter);
+                LocalDateTime.parse(rangeStart, getFormat());
         LocalDateTime dateEnd = rangeEnd == null || rangeEnd.isEmpty() ?
                 null :
-                LocalDateTime.parse(rangeEnd, formatter);
+                LocalDateTime.parse(rangeEnd, getFormat());
         Set<Integer> userSet = users == null ?
                 new HashSet<>() :
                 Arrays.stream(users).boxed().collect(Collectors.toSet());
@@ -129,7 +130,7 @@ public class EventServiceImpl implements EventService {
     @Override
     @Transactional
     public EventFullDto addEvent(NewEventDto newEventDto, int userId) {
-        if (LocalDateTime.parse(newEventDto.getEventDate(), formatter).equals(LocalDateTime.now().plusHours(2))) {
+        if (LocalDateTime.parse(newEventDto.getEventDate(), getFormat()).equals(LocalDateTime.now().plusHours(2))) {
             throw new ConditionsNotMetException("Дата события не может быть раньше, чем через два часа");
         }
         User user = getUserOrThrow(userId); //проверка того, что такой пользователь существует
@@ -156,7 +157,7 @@ public class EventServiceImpl implements EventService {
         if (eventToUpdate.getState().equals(EventState.PUBLISHED)) {
             throw new ConditionsNotMetException("Нельзя изменить опубликованное событие");
         }
-        LocalDateTime eventDate = LocalDateTime.parse(eventUpdateDto.getEventDate(), formatter);
+        LocalDateTime eventDate = LocalDateTime.parse(eventUpdateDto.getEventDate(), getFormat());
         if (eventDate.equals(LocalDateTime.now().plusHours(2))) {
             throw new ConditionsNotMetException("Дата события не может быть раньше, чем через два часа");
         }
@@ -174,7 +175,7 @@ public class EventServiceImpl implements EventService {
             eventToUpdate.setDescription(updatedEvent.getDescription());
         }
         if (updatedEvent.getEventDate() != null) {
-            eventToUpdate.setEventDate(LocalDateTime.parse(eventUpdateDto.getEventDate(), formatter));
+            eventToUpdate.setEventDate(LocalDateTime.parse(eventUpdateDto.getEventDate(), getFormat()));
         }
         if (updatedEvent.getIsPaid() != null) {
             eventToUpdate.setIsPaid(eventUpdateDto.getPaid());
@@ -183,7 +184,7 @@ public class EventServiceImpl implements EventService {
             eventToUpdate.setParticipantLimit(eventUpdateDto.getParticipantLimit());
         }
         if (updatedEvent.getTitle() != null) {
-            eventToUpdate.setTitle(eventToUpdate.getTitle());
+            eventToUpdate.setTitle(updatedEvent.getTitle());
         }
         return EventMapper.eventToFullDto(eventToUpdate, eventToUpdate.getRequests(), getStatForEvent(eventToUpdate.getId()));
     }
@@ -299,7 +300,7 @@ public class EventServiceImpl implements EventService {
                 request.getServerName(),
                 request.getRequestURI(),
                 request.getRemoteAddr(),
-                LocalDateTime.now().format(formatter)
+                LocalDateTime.now().format(getFormat())
         );
         statisticsClient.sendHit(statHitDto);
     }
@@ -340,8 +341,8 @@ public class EventServiceImpl implements EventService {
     private StatEntry getStatForEvent(int eventId) {
         LocalDateTime localDateTime = LocalDateTime.now();
         return statisticsClient.getEventStat(eventId,
-                localDateTime.format(formatter),
-                localDateTime.format(formatter));
+                localDateTime.format(getFormat()),
+                localDateTime.format(getFormat()));
     }
 
     private void checkEventInitiator(Event event, int userId) {

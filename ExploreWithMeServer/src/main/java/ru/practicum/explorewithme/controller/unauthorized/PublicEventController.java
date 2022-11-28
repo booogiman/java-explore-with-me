@@ -1,11 +1,10 @@
 package ru.practicum.explorewithme.controller.unauthorized;
 
-import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
-import ru.practicum.explorewithme.model.enumeration.EventSortValues;
 import ru.practicum.explorewithme.service.EventService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +41,7 @@ public class PublicEventController {
                                          @RequestParam(required = false) String rangeStart,
                                          @RequestParam(required = false) String rangeEnd,
                                          @RequestParam(required = false, defaultValue = "false") boolean onlyAvailable,
-                                         @RequestParam(required = false) EventSortValues sort,
+                                         @RequestParam(required = false) String sort,
                                          @PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                          @Positive @RequestParam(defaultValue = "10") int size,
                                          HttpServletRequest request) {
@@ -50,7 +49,7 @@ public class PublicEventController {
                         "доступные={}, отсортированы по={}, from={}, size={}",
                 text, categories, isPaid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         return eventService.getEvents(request, text, categories, isPaid, rangeStart, rangeEnd, onlyAvailable,
-                sort.name(), from, size);
+                sort, from, size);
     }
 
     /**

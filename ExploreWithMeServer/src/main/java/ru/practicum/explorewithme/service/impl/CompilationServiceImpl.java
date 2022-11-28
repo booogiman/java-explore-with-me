@@ -1,18 +1,18 @@
 package ru.practicum.explorewithme.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.client.StatisticsClient;
 import ru.practicum.explorewithme.controller.exceptionHandling.exception.EntryNotFoundException;
 import ru.practicum.explorewithme.dto.compilation.CompilationDto;
 import ru.practicum.explorewithme.dto.compilation.NewCompilationDto;
 import ru.practicum.explorewithme.dto.compilation.mapper.CompilationMapper;
-import lombok.RequiredArgsConstructor;
 import ru.practicum.explorewithme.model.Compilation;
 import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.model.StatEntry;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.stereotype.Service;
 import ru.practicum.explorewithme.repository.CompilationRepository;
 import ru.practicum.explorewithme.service.CompilationService;
 import ru.practicum.explorewithme.service.EventService;
@@ -20,6 +20,8 @@ import ru.practicum.explorewithme.service.EventService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+
+import static ru.practicum.explorewithme.UtilClass.getFormat;
 
 
 @Service
@@ -128,8 +130,8 @@ public class CompilationServiceImpl implements CompilationService {
         List<StatEntry> statEntryList = new ArrayList<>();
         for (Event event : eventList) {
             statEntryList.add(statisticsClient.getEventStat(event.getId(),
-                    LocalDateTime.now().format(formatter),
-                    LocalDateTime.now().format(formatter)));
+                    LocalDateTime.now().format(getFormat()),
+                    LocalDateTime.now().format(getFormat())));
         }
         return statEntryList;
     }

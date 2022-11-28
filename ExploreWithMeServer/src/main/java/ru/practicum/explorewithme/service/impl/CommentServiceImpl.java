@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static ru.practicum.explorewithme.UtilClass.getFormat;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -39,7 +41,7 @@ public class CommentServiceImpl implements CommentService {
         if (event.getState().equals(EventState.PENDING)) {
             throw new ConditionsNotMetException("Нельзя оставить комментарий к еще неопубликованному событию!");
         }
-        commentDto.setCreated(LocalDateTime.now().format(formatter));
+        commentDto.setCreated(LocalDateTime.now().format(getFormat()));
         Comment comment = CommentMapper.dtoToComment(commentDto, user, event);
         commentRepository.save(comment);
         return CommentMapper.commentToDto(comment);

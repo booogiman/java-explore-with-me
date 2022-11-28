@@ -18,6 +18,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import static ru.practicum.explorewithme.UtilClass.getFormat;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
 
@@ -29,7 +31,7 @@ public class EventMapper {
                 event.getAnnotation(),
                 CategoryMapper.categoryToDto(event.getCategory()),
                 event.getRequests().size(),
-                event.getEventDate().format(FORMATTER),
+                event.getEventDate().format(getFormat()),
                 UserMapper.userToShortDto(event.getInitiator()),
                 event.getIsPaid(),
                 event.getTitle(),
@@ -43,16 +45,16 @@ public class EventMapper {
                 event.getAnnotation(),
                 CategoryMapper.categoryToDto(event.getCategory()),
                 requestList != null ? requestList.stream().filter(request1 -> request1.getState() == RequestState.CONFIRMED).count() : 0,
-                event.getEventDate().format(FORMATTER),
+                event.getEventDate().format(getFormat()),
                 UserMapper.userToShortDto(event.getInitiator()),
                 event.getIsPaid(),
                 event.getTitle(),
                 statEntry != null ? statEntry.getHits() : 0,
-                event.getCreatedOn().format(FORMATTER),
+                event.getCreatedOn().format(getFormat()),
                 event.getDescription(),
                 LocationMapper.locationToDto(event.getLocation()),
                 event.getParticipantLimit(),
-                event.getPublishedOn() != null ? event.getPublishedOn().format(FORMATTER) : null,
+                event.getPublishedOn() != null ? event.getPublishedOn().format(getFormat()) : null,
                 event.getRequestModeration(),
                 event.getState().toString(),
                 event.getComments() != null ? CommentMapper.commentToDtoList(event.getComments()) : null
@@ -63,7 +65,7 @@ public class EventMapper {
         Event event = new Event();
         event.setAnnotation(newEventDto.getAnnotation());
         event.setDescription(newEventDto.getDescription());
-        event.setEventDate(LocalDateTime.parse(newEventDto.getEventDate(), FORMATTER));
+        event.setEventDate(LocalDateTime.parse(newEventDto.getEventDate(), getFormat()));
         event.setIsPaid(newEventDto.isPaid());
         event.setParticipantLimit(newEventDto.getParticipantLimit());
         event.setRequestModeration(newEventDto.isRequestModeration());
@@ -77,7 +79,7 @@ public class EventMapper {
         event.setAnnotation(eventUpdateDto.getAnnotation());
         event.setCategory(category);
         event.setDescription(eventUpdateDto.getDescription());
-        event.setEventDate(LocalDateTime.parse(eventUpdateDto.getEventDate(), FORMATTER));
+        event.setEventDate(LocalDateTime.parse(eventUpdateDto.getEventDate(), getFormat()));
         event.setIsPaid(eventUpdateDto.getPaid());
         event.setId(eventUpdateDto.getEventId());
         event.setParticipantLimit(eventUpdateDto.getParticipantLimit());
@@ -90,7 +92,7 @@ public class EventMapper {
         event.setAnnotation(adminUpdateEventRequestDto.getAnnotation());
         event.setCategory(category);
         event.setDescription(adminUpdateEventRequestDto.getDescription());
-        event.setEventDate(LocalDateTime.parse(adminUpdateEventRequestDto.getEventDate(), FORMATTER));
+        event.setEventDate(LocalDateTime.parse(adminUpdateEventRequestDto.getEventDate(), getFormat()));
         event.setIsPaid(adminUpdateEventRequestDto.getPaid());
         event.setId(eventId);
         event.setParticipantLimit(adminUpdateEventRequestDto.getParticipantLimit());

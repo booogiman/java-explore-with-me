@@ -12,6 +12,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.explorewithme.UtilClass.getFormat;
+
 public class CommentMapper {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -21,7 +23,7 @@ public class CommentMapper {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .authorName(comment.getAuthor().getName())
-                .created(comment.getCreatedOn().format(FORMATTER))
+                .created(comment.getCreatedOn().format(getFormat()))
                 .build();
     }
 
@@ -38,7 +40,7 @@ public class CommentMapper {
         comment.setContent(commentDto.getContent());
         comment.setAuthor(user);
         comment.setEvent(event);
-        comment.setCreatedOn(LocalDateTime.parse(commentDto.getCreated(), FORMATTER));
+        comment.setCreatedOn(LocalDateTime.parse(commentDto.getCreated(), getFormat()));
         return comment;
     }
 }

@@ -8,6 +8,12 @@ import javax.persistence.*;
 @Entity(name = "Location")
 @Table(name = "locations")
 public class Location {
+
+    /**
+     *Координаты
+     *latitude - широта
+     *longitude - долгота
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, unique = true)

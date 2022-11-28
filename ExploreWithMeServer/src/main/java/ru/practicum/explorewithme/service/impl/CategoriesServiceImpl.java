@@ -23,7 +23,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CategoriesServiceImpl implements CategoriesService {
 
-    //применен AutoWired для удаления цикличной зависимости
     private final CategoryRepository categoryRepository;
 
     private final EventService eventService;
