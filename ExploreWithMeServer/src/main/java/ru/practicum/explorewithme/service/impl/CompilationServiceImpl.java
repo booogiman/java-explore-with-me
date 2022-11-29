@@ -18,7 +18,6 @@ import ru.practicum.explorewithme.service.CompilationService;
 import ru.practicum.explorewithme.service.EventService;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static ru.practicum.explorewithme.UtilClass.getFormat;

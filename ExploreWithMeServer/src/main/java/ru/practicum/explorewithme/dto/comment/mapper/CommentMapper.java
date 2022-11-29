@@ -6,7 +6,6 @@ import ru.practicum.explorewithme.model.Event;
 import ru.practicum.explorewithme.model.User;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
