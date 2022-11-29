@@ -1,14 +1,12 @@
 package ru.practicum.explorewithme.controller.admin;
 
 
-import org.springframework.validation.annotation.Validated;
-import ru.practicum.explorewithme.dto.comment.CommentDto;
-import ru.practicum.explorewithme.dto.event.AdminUpdateEventRequestDto;
-import ru.practicum.explorewithme.dto.event.EventFullDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.explorewithme.service.CommentService;
+import ru.practicum.explorewithme.dto.event.AdminUpdateEventRequestDto;
+import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.service.EventService;
 
 import java.util.List;
@@ -22,7 +20,6 @@ public class AdminEventController {
 
     private final EventService eventService;
 
-    private final CommentService commentService;
 
     @GetMapping("/events")
     public List<EventFullDto> getEventsAdmin(@RequestParam(required = false) int[] users,
@@ -57,16 +54,4 @@ public class AdminEventController {
         return eventService.rejectEvent(eventId);
     }
 
-    @PatchMapping("/events/{eventId}/comments/{commentId}")
-    public CommentDto updateComment(@PathVariable int commentId,
-                                    @RequestBody CommentDto commentDto) {
-        log.info("Администратор отредактировал комментарий id={}, comment={}", commentId, commentDto);
-        return commentService.editCommentAdmin(commentDto);
-    }
-
-    @DeleteMapping("/events/{eventId}/comments/{commentId}")
-    public void deleteComment(@PathVariable int commentId) {
-        log.info("Администратор удалил комментарий id={}", commentId);
-        commentService.deleteComment(commentId);
-    }
 }
