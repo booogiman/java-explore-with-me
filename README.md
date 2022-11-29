@@ -59,3 +59,4 @@ API основного сервиса разделено на три части.
 * Hibernate ORM
 * PostgreSQL
 * Docker
+* OpenAPI Specification
