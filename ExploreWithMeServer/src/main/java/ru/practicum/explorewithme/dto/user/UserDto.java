@@ -11,11 +11,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class UserDto {
     private Integer id;
-    //@JsonProperty(required = true)
     @NotNull
     @NotBlank
     private String name;
-    //@JsonProperty(required = true)
     @NotNull
     @NotBlank
     @Email

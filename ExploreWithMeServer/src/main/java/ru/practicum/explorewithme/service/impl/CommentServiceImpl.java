@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.explorewithme.controller.exceptionHandling.exception.ConditionsNotMetException;
 import ru.practicum.explorewithme.controller.exceptionHandling.exception.EntryNotFoundException;
 import ru.practicum.explorewithme.dto.comment.CommentDto;
+import ru.practicum.explorewithme.dto.comment.UpdateCommentDTO;
 import ru.practicum.explorewithme.dto.comment.mapper.CommentMapper;
 import ru.practicum.explorewithme.model.Comment;
 import ru.practicum.explorewithme.model.Event;
@@ -64,17 +65,19 @@ public class CommentServiceImpl implements CommentService {
     public CommentDto editCommentAdmin(CommentDto commentDto) {
         Comment commentToUpdate = getCommentOrThrow(commentDto.getId());
         commentToUpdate.setContent(commentDto.getContent());
+        commentRepository.save(commentToUpdate);
         return CommentMapper.commentToDto(commentToUpdate);
     }
 
     @Override
     @Transactional
-    public CommentDto editCommentUser(CommentDto commentDto) {
-        Comment commentToUpdate = getCommentOrThrow(commentDto.getId());
+    public CommentDto editCommentUser(UpdateCommentDTO updateCommentDTO) {
+        Comment commentToUpdate = getCommentOrThrow(updateCommentDTO.getId());
         if (commentToUpdate.getCreatedOn().isBefore(LocalDateTime.now().minusWeeks(1L))) {
             throw new ConditionsNotMetException("Комментарий оставлен слишком давно и вы не можете его отредактировать");
         }
-        commentToUpdate.setContent(commentDto.getContent());
+        commentToUpdate.setContent(updateCommentDTO.getContent());
+        commentRepository.save(commentToUpdate);
         return CommentMapper.commentToDto(commentToUpdate);
     }
 

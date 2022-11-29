@@ -1,11 +1,13 @@
 package ru.practicum.explorewithme.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
+@ToString
 @Entity(name = "Comment")
 @Table(name = "comments")
 public class Comment {

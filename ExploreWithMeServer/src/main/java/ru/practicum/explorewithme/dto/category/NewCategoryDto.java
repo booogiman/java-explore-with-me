@@ -7,7 +7,6 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class NewCategoryDto {
-    //@JsonProperty(required = true)
     @NotBlank
     private String name;
 }

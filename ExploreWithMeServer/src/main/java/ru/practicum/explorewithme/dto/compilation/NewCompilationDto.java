@@ -11,7 +11,6 @@ import java.util.List;
 public class NewCompilationDto {
     private List<Integer> events;
     private boolean pinned;
-    //@JsonProperty(required = true)
     @NotBlank
     private String title;
 }

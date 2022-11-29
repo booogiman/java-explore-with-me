@@ -1,6 +1,7 @@
 package ru.practicum.explorewithme.service;
 
 import ru.practicum.explorewithme.dto.comment.CommentDto;
+import ru.practicum.explorewithme.dto.comment.UpdateCommentDTO;
 import ru.practicum.explorewithme.model.Comment;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface CommentService {
 
     CommentDto editCommentAdmin(CommentDto commentDto);
 
-    CommentDto editCommentUser(CommentDto commentDto);
+    CommentDto editCommentUser(UpdateCommentDTO updateCommentDTO);
 
     Comment getCommentOrThrow(int commentId); //служебный метод для проверки наличия комментария в базе
 }

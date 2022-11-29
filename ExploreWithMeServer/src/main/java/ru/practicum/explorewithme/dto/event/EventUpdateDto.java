@@ -11,7 +11,6 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 public class EventUpdateDto implements Serializable {
-    //@JsonProperty(required = true)
     @NotNull
     @Positive
     private Integer eventId;

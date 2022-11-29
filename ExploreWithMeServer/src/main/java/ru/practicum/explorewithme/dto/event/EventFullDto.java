@@ -25,14 +25,12 @@ public class EventFullDto {
     @NotBlank
     private String annotation;
     @NotNull
-    @NotBlank
     private CategoryDto category;
     private long confirmedRequests;
     @NotNull
     @NotBlank
     private String eventDate;
     @NotNull
-    @NotBlank
     private UserShortDto initiator;
     @NotNull
     @NotBlank
@@ -44,7 +42,6 @@ public class EventFullDto {
     private String createdOn;
     private String description;
     @NotNull
-    @NotBlank
     private LocationDto location;
     private int participantLimit;
     private String publishedOn;

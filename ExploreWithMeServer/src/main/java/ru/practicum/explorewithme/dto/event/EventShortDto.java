@@ -21,14 +21,12 @@ public class EventShortDto {
     @NotBlank
     private String annotation;
     @NotNull
-    @NotBlank
     private CategoryDto category;
     private long confirmedRequests;
     @NotNull
     @NotBlank
     private String eventDate;
     @NotNull
-    @NotBlank
     private UserShortDto initiator;
     @NotNull
     @NotBlank

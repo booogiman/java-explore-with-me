@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.explorewithme.dto.comment.CommentDto;
+import ru.practicum.explorewithme.dto.comment.UpdateCommentDTO;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
 import ru.practicum.explorewithme.dto.event.EventUpdateDto;
@@ -62,9 +63,11 @@ public class PrivateEventController {
     public CommentDto updateComment(@PathVariable int userId,
                                     @PathVariable int commentId,
                                     @PathVariable int eventId,
-                                    @RequestBody CommentDto commentDto) {
-        log.info("Пользователь id={} отредактировал комментарий id={} к событию id={}, comment={}", userId, commentId, eventId, commentDto);
-        return commentService.editCommentUser(commentDto);
+                                    @RequestBody UpdateCommentDTO updateCommentDTO) {
+        log.info("Пользователь id={} отредактировал комментарий id={} к событию id={}, comment={}"
+                , updateCommentDTO.getAuthorID(), updateCommentDTO.getId()
+        ,updateCommentDTO.getEventID(),updateCommentDTO.getContent());
+        return commentService.editCommentUser(updateCommentDTO);
     }
 
     @GetMapping("/{userId}/comments")
