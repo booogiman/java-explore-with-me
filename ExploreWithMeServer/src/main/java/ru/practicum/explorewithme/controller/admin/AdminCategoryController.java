@@ -1,5 +1,7 @@
 package ru.practicum.explorewithme.controller.admin;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -15,12 +17,17 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping(path = "/admin")
+@Tag(name = "Admin: Категория", description = "API для работы с категориями")
 public class AdminCategoryController {
 
     private final CategoriesService categoriesService;
 
+    @Operation(
+            summary = "Изменение категории",
+            description = "Обратите внимание: имя категории должно быть уникальным"
+    )
     @PatchMapping("/categories")
-    public CategoryDto updateCategory(@RequestBody @Valid  CategoryDto categoryDto) {
+    public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
         log.info("Администратор обновил категорию={}", categoryDto);
         return categoriesService.updateCategory(categoryDto);
     }

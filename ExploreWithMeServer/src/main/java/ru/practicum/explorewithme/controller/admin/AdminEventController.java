@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.controller.admin;
 
 import org.springframework.validation.annotation.Validated;
 import ru.practicum.explorewithme.dto.comment.CommentDto;
+import ru.practicum.explorewithme.dto.comment.UpdateCommentDTO;
 import ru.practicum.explorewithme.dto.event.AdminUpdateEventRequestDto;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import lombok.RequiredArgsConstructor;
@@ -57,11 +58,10 @@ public class AdminEventController {
         return eventService.rejectEvent(eventId);
     }
 
-    @PatchMapping("/events/{eventId}/comments/{commentId}")
-    public CommentDto updateComment(@PathVariable int commentId,
-                                    @RequestBody CommentDto commentDto) {
-        log.info("Администратор отредактировал комментарий id={}, comment={}", commentId, commentDto);
-        return commentService.editCommentAdmin(commentDto);
+    @PatchMapping("/events/comments")
+    public CommentDto updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
+        log.info("Администратор отредактировал комментарий id={}, comment={}", updateCommentDTO.getId(), updateCommentDTO.getContent());
+        return commentService.editCommentAdmin(updateCommentDTO);
     }
 
     @DeleteMapping("/events/{eventId}/comments/{commentId}")

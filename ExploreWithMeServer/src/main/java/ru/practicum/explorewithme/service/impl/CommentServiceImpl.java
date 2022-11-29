@@ -60,9 +60,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto editCommentAdmin(CommentDto commentDto) {
-        Comment commentToUpdate = getCommentOrThrow(commentDto.getId());
-        commentToUpdate.setContent(commentDto.getContent());
+    public CommentDto editCommentAdmin(UpdateCommentDTO updateCommentDTO) {
+        Comment commentToUpdate = getCommentOrThrow(updateCommentDTO.getId());
+        commentToUpdate.setContent(updateCommentDTO.getContent());
         commentRepository.save(commentToUpdate);
         return CommentMapper.commentToDto(commentToUpdate);
     }

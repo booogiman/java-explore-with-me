@@ -14,7 +14,7 @@ public interface CommentService {
 
     void deleteComment(int commentId);
 
-    CommentDto editCommentAdmin(CommentDto commentDto);
+    CommentDto editCommentAdmin(UpdateCommentDTO updateCommentDTO);
 
     CommentDto editCommentUser(UpdateCommentDTO updateCommentDTO);
 
