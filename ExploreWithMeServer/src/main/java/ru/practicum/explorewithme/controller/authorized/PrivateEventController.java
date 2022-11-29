@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.explorewithme.dto.comment.CommentDto;
+import ru.practicum.explorewithme.dto.comment.UpdateCommentDTO;
 import ru.practicum.explorewithme.dto.event.EventFullDto;
 import ru.practicum.explorewithme.dto.event.EventShortDto;
 import ru.practicum.explorewithme.dto.event.EventUpdateDto;
@@ -11,6 +13,7 @@ import ru.practicum.explorewithme.dto.event.NewEventDto;
 import ru.practicum.explorewithme.dto.request.ParticipationRequestDto;
 import ru.practicum.explorewithme.service.EventService;
 import ru.practicum.explorewithme.service.RequestService;
+import ru.practicum.explorewithme.service.CommentService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -24,6 +27,7 @@ import java.util.List;
 public class PrivateEventController {
     private final EventService eventService;
     private final RequestService requestService;
+    private final CommentService commentService;
 
     @GetMapping("/{userId}/events")
     public List<EventShortDto> getEventsOfUserById(@PathVariable int userId,
@@ -45,6 +49,28 @@ public class PrivateEventController {
                                   @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Пользователь id={} создал событие={}", userId, newEventDto);
         return eventService.addEvent(newEventDto, userId);
+    }
+
+    @PostMapping("/{userId}/events/{eventId}/comments")
+    public CommentDto createComment(@PathVariable int userId,
+                                    @PathVariable int eventId,
+                                    @RequestBody CommentDto commentDto) {
+        log.info("Пользователь id={} запостил комментарий={} к событию id={}", userId, commentDto, eventId);
+        return commentService.createComment(commentDto, userId, eventId);
+    }
+
+    @PatchMapping("/events/comments")
+    public CommentDto updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
+        log.info("Пользователь id={} отредактировал комментарий id={} к событию id={}, comment={}", updateCommentDTO.getAuthorID(), updateCommentDTO.getId(),updateCommentDTO.getEventID(),updateCommentDTO.getContent());
+        return commentService.editCommentUser(updateCommentDTO);
+    }
+
+    @GetMapping("/{userId}/comments")
+    public List<CommentDto> getCommentsForUser(@PathVariable int userId,
+                                               @RequestParam(defaultValue = "0") int from,
+                                               @RequestParam(defaultValue = "10") int size) {
+        log.info("Запрошены комментарии пользователя id={} from={} size={}", userId, from, size);
+        return commentService.getAllByUserId(userId, from, size);
     }
 
     @GetMapping("/{userId}/events/{eventId}")

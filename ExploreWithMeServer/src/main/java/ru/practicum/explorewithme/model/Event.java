@@ -51,4 +51,6 @@ public class Event {
     private String title;
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "event")
     private List<Request> requests;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "event")
+    private List<Comment> comments;
 }

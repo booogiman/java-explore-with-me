@@ -3,6 +3,7 @@ package ru.practicum.explorewithme.dto.event.mapper;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import ru.practicum.explorewithme.dto.category.mapper.CategoryMapper;
+import ru.practicum.explorewithme.dto.comment.mapper.CommentMapper;
 import ru.practicum.explorewithme.dto.event.*;
 import ru.practicum.explorewithme.dto.location.mapper.LocationMapper;
 import ru.practicum.explorewithme.dto.user.mapper.UserMapper;
@@ -53,7 +54,8 @@ public class EventMapper {
                 event.getParticipantLimit(),
                 event.getPublishedOn() != null ? event.getPublishedOn().format(getFormat()) : null,
                 event.getRequestModeration(),
-                event.getState().toString()
+                event.getState().toString(),
+                event.getComments() != null ? CommentMapper.commentToDtoList(event.getComments()) : null
         );
     }
 
