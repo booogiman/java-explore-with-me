@@ -59,14 +59,9 @@ public class PrivateEventController {
         return commentService.createComment(commentDto, userId, eventId);
     }
 
-    @PatchMapping("/{userId}/events/{eventId}/comments/{commentId}")
-    public CommentDto updateComment(@PathVariable int userId,
-                                    @PathVariable int commentId,
-                                    @PathVariable int eventId,
-                                    @RequestBody UpdateCommentDTO updateCommentDTO) {
-        log.info("Пользователь id={} отредактировал комментарий id={} к событию id={}, comment={}"
-                , updateCommentDTO.getAuthorID(), updateCommentDTO.getId()
-        ,updateCommentDTO.getEventID(),updateCommentDTO.getContent());
+    @PatchMapping("/events/comments")
+    public CommentDto updateComment(@RequestBody UpdateCommentDTO updateCommentDTO) {
+        log.info("Пользователь id={} отредактировал комментарий id={} к событию id={}, comment={}", updateCommentDTO.getAuthorID(), updateCommentDTO.getId(),updateCommentDTO.getEventID(),updateCommentDTO.getContent());
         return commentService.editCommentUser(updateCommentDTO);
     }
 

@@ -16,7 +16,6 @@ import static ru.practicum.explorewithme.UtilClass.getFormat;
 
 public class CommentMapper {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static CommentDto commentToDto(Comment comment) {
         return CommentDto.builder()

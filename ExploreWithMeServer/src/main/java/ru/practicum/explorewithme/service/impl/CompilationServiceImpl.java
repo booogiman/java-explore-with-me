@@ -33,7 +33,6 @@ public class CompilationServiceImpl implements CompilationService {
     private final EventService eventService;
     private final StatisticsClient statisticsClient;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     @Transactional

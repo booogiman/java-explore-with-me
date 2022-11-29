@@ -34,7 +34,6 @@ public class EventServiceImpl implements EventService {
     private final UserService userService;
     private final StatisticsClient statisticsClient;
 
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public EventFullDto getEventById(HttpServletRequest request, int eventId) {

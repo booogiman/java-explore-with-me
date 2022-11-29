@@ -23,7 +23,6 @@ import static ru.practicum.explorewithme.UtilClass.getFormat;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static EventShortDto eventToShortDto(Event event, StatEntry statEntry) {
         return new EventShortDto(
